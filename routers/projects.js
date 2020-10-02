@@ -15,7 +15,7 @@ router.get('/:id/actions', validatePostId, (req,res) => {
     .catch(err => {
         res.status(500).json({ message: 'Unable to get project actions.' });
     })
-})
+});
 
 router.post('/', (req,res) => {
     const { name, description, completed } = req.body;
