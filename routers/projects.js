@@ -6,6 +6,17 @@ router.get('/:id', validatePostId, (req,res) => {
     res.status(200).json(req.valData);
 });
 
+router.get('/:id/actions', validatePostId, (req,res) => {
+    db
+    .getProjectActions(parseInt(req.params.id))
+    .then(data => {
+        res.status(200).json(data);
+    })
+    .catch(err => {
+        res.status(500).json({ message: 'Unable to get project actions.' });
+    })
+})
+
 router.post('/', (req,res) => {
     const { name, description, completed } = req.body;
     if(!req.body || !name || !description) {
@@ -22,6 +33,32 @@ router.post('/', (req,res) => {
         res.status(500).json({ message: 'Unable to post project.' });
     })
 });
+
+router.put('/:id', validatePostId, (req,res) => {
+    if(!req.body) {
+        return res.status(400).json({ message: 'Missing required fields.' });
+    }
+
+    db
+    .update(parseInt(req.params.id), req.body)
+    .then(data => {
+        res.status(202).json(data);
+    })
+    .catch(err => {
+        res.status(500).json({ message: "Unable to update project." });
+    })
+});
+
+router.delete('/:id', validatePostId, (req,res) => {
+    db
+    .remove(parseInt(req.params.id))
+    .then(data => {
+        res.status(202).json(data);
+    })
+    .catch(err => {
+        res.status(500).json({ message: 'Unable to remove project.' });
+    })
+})
 
 function validatePostId (req,res,next) {
     db
